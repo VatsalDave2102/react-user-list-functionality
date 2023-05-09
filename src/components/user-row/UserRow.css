@@ -1,24 +1,26 @@
-.rounded-circle{
-    width: 50px;
+.rounded-circle {
+  width: 50px;
 }
-select:focus{
-     box-shadow: none !important;
-     border-color: #ced4da !important;
+select:focus {
+  box-shadow: none !important;
+  border-color: #ced4da !important;
 }
-.form-select{
-    width: auto !important;
-    background-color: #e9ecf8 !important;
+.form-select {
+  width: auto !important;
+  background-color: #e9ecf8 !important;
 }
-.name, .email {
-    text-overflow: ellipsis;
-    max-width: 14rem;
-    white-space: nowrap;
-    overflow: hidden;
+.name,
+.email {
+  text-overflow: ellipsis;
+  max-width: 14rem;
+  white-space: nowrap;
+  overflow: hidden;
 }
-.profile-container{
-    border-radius: 25px;
-    transition: background-color 0.5s ease;
+.profile-container {
+  border-radius: 25px;
+  transition: background-color 0.5s ease;
 }
-.profile-container:hover{
-    background-color: rgb(232, 232, 232);
+.profile-container:hover {
+  background-color: rgb(232, 232, 232);
+  cursor: pointer;
 }
