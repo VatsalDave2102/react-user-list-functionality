@@ -11,17 +11,22 @@ const initialState = {
   usersList: [],
   userCard: null,
   currentPage: 0,
-  totalPages: null
+  totalPages: null,
 };
 
 export const fetchUserData = createAsyncThunk(
   "users/fetchUserData",
-  async (page) => {
-    const response = await axios.get(
-      `https://servers-omega.vercel.app/users/p?limit=8&page=${page}`
-    );
-    const data = await response.data;
-    return data;
+  async (page, {rejectWithValue}) => {
+    try{
+      const response = await axios.get(
+        `https://servers-omega.vercel.app/users/p?limit=8&page=${page}`
+      );
+      const data = await response.data;
+      return data;
+    }catch(error){
+      throw Error('Failed to fetch users')
+    }
+    
   }
 );
 
@@ -37,18 +42,18 @@ const userSlice = createSlice({
         email: hoveredUser.email,
         avatar: hoveredUser.avatar,
         active: hoveredUser.active,
-        progress: "60",
-        clicksReviewed: "2,450",
-        monthlyClicks: "5,000",
+        progress: Math.floor(Math.random()*101),
+        clicksReviewed: Math.floor((Math.random()*1001) + 2000),
+        monthlyClicks: Math.floor((Math.random()*2001) + 4000),
       };
     },
     hideCard(state) {
       state.userCard = null;
     },
-    changePage(state,action){
-      state.pageCount = action.payload
-      console.log(action.payload)
-    }
+    changePage(state, action) {
+      state.pageCount = action.payload;
+      console.log(action.payload);
+    },
   },
   extraReducers(builder) {
     builder
@@ -59,11 +64,11 @@ const userSlice = createSlice({
         state.fetchStatus = "success";
         state.usersList = action.payload.users;
         state.currentPage = action.payload.currentPage;
-        state.totalPages = action.payload.totalPages
+        state.totalPages = action.payload.totalPages;
       })
       .addCase(fetchUserData.rejected, (state, action) => {
         state.fetchStatus = "failed";
-        state.error = action.payload.error
+        state.error =  "Page not found"
       });
   },
 });

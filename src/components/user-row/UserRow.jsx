@@ -69,7 +69,7 @@ const UserRow = ({ name, email, active, owner, role, avatar, id }) => {
       </td>
 
       {/* Td for access */}
-      <td style={isOwner ? accessColumnStyle : undefined}>{accessColumnData}</td>
+      <td style={isOwner ? accessColumnStyle : undefined}>{isOwner ? 'Owner': accessColumnData}</td>
 
       {/* Lock / Dustbin icon */}
       <td style={{color: "gray"}}>
