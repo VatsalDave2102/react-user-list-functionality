@@ -4,6 +4,7 @@ import "./UserCard.css";
 
 const UserCard = () => {
   const cardData = useSelector((state) => state.users.userCard);
+
   let statusStyle = {
     width: "15px",
     height: "15px",
@@ -11,9 +12,11 @@ const UserCard = () => {
     backgroundColor: "rgb(34, 195, 6)",
     border: "2px solid white",
   };
+
   if (!cardData.active) {
     statusStyle.backgroundColor = "#d6a92d";
   }
+
   return (
     <Card
       style={{ width: "17rem" }}

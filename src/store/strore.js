@@ -14,19 +14,20 @@ const initialState = {
   totalPages: null,
 };
 
+// createAsyncThunk to perform async API call
 export const fetchUserData = createAsyncThunk(
   "users/fetchUserData",
-  async (page, {rejectWithValue}) => {
-    try{
+  // passing page as parameter to update page number
+  async (page) => {
+    try {
       const response = await axios.get(
         `https://servers-omega.vercel.app/users/p?limit=8&page=${page}`
       );
       const data = await response.data;
       return data;
-    }catch(error){
-      throw Error('Failed to fetch users')
+    } catch (error) {
+      throw Error("Failed to fetch users");
     }
-    
   }
 );
 
@@ -34,6 +35,7 @@ const userSlice = createSlice({
   name: "users",
   initialState,
   reducers: {
+    // reducer to set userCard state when hovered over the user row
     showCard(state, action) {
       const userId = action.payload.userId;
       const hoveredUser = state.usersList.find((user) => user._id == userId);
@@ -42,19 +44,17 @@ const userSlice = createSlice({
         email: hoveredUser.email,
         avatar: hoveredUser.avatar,
         active: hoveredUser.active,
-        progress: Math.floor(Math.random()*101),
-        clicksReviewed: Math.floor((Math.random()*1001) + 2000),
-        monthlyClicks: Math.floor((Math.random()*2001) + 4000),
+        progress: Math.floor(Math.random() * 101),
+        clicksReviewed: Math.floor(Math.random() * 1001 + 2000),
+        monthlyClicks: Math.floor(Math.random() * 2001 + 4000),
       };
     },
+    // reducer to set userCard state when hovered out of the user row
     hideCard(state) {
       state.userCard = null;
     },
-    changePage(state, action) {
-      state.pageCount = action.payload;
-      console.log(action.payload);
-    },
   },
+  // extraReducers to handle the API call
   extraReducers(builder) {
     builder
       .addCase(fetchUserData.pending, (state, action) => {
@@ -68,7 +68,7 @@ const userSlice = createSlice({
       })
       .addCase(fetchUserData.rejected, (state, action) => {
         state.fetchStatus = "failed";
-        state.error =  "Page not found"
+        state.error = "Page not found";
       });
   },
 });
