@@ -29,4 +29,15 @@
 .clicks-review, .monthly-clicks{
     font-size: 0.8rem;
 }
+.status{
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: rgb(34, 195, 6);
+  border: 2px solid white;
+  top: 0;
+  right: 0;
+  position: absolute;
+  margin-right: 30px;
+}
  

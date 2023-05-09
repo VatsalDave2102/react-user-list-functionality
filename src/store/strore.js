@@ -1,130 +1,70 @@
-import { configureStore, createSlice } from "@reduxjs/toolkit";
+import {
+  configureStore,
+  createAsyncThunk,
+  createSlice,
+} from "@reduxjs/toolkit";
+import axios from "axios";
 
 const initialState = {
-  usersList: [
-    {
-      name: "Jana Strassmann",
-      email: "batz.moritmer@yahooo.com",
-      status: "Active",
-      access: "Owner",
-      img: "https://reqres.in/img/faces/1-image.jpg",
-      id: "1",
-      clicksReviewed: "2,450",
-      monthlyClicks: "5000",
-      progress: "60"
-    },
-    {
-      name: "Jube Bowman",
-      email: "ulrich.owen@kristin.biz",
-      status: "Active",
-      access: "Manager",
-      img: "https://reqres.in/img/faces/2-image.jpg",
-      id: "2",
-      clicksReviewed: "2,360",
-      monthlyClicks: "4000",
-      progress: "50"
-    },
-    {
-      name: "Kwak Seong-Min",
-      email: "kale_lehner@yahoo.com",
-      status: "Active",
-      access: "Read",
-      img: "https://reqres.in/img/faces/3-image.jpg",
-      id: "3",
-      clicksReviewed: "1,233",
-      monthlyClicks: "7600",
-      progress: "70"
-    },
-    {
-      name: "Leon Hunt",
-      email: "ulrich.owen@kristin.biz",
-      status: "Active",
-      access: "Read",
-      img: "https://reqres.in/img/faces/4-image.jpg",
-      id: "4",
-      clicksReviewed: "2,150",
-      monthlyClicks: "5090",
-      progress: "80"
-    },
-    {
-      name: "Nwoye Akachi",
-      email: "ulrich.owen@kristin.biz",
-      status: "Active",
-      access: "Manager",
-      img: "https://reqres.in/img/faces/5-image.jpg",
-      id: "5",
-      clicksReviewed: "2,500",
-      monthlyClicks: "9000",
-      progress: "90"
-    },
-    {
-      name: "Nombeko Mabandua",
-      email: "kale_lehner@yahoo.com",
-      status: "Active",
-      access: "Manager",
-      img: "https://reqres.in/img/faces/6-image.jpg",
-      id: "6",
-      clicksReviewed: "1,600",
-      monthlyClicks: "3500",
-      progress: "30"
-    },
-    {
-      name: "Paulina Gayaso",
-      email: "ulrich.owen@kristin.biz",
-      status: "Active",
-      access: "Manager",
-      img: "https://reqres.in/img/faces/5-image.jpg",
-      id: "7",
-      clicksReviewed: "2,500",
-      monthlyClicks: "9000",
-      progress: "90"
-    },
-    {
-      name: "Siri Jakobsson",
-      email: "ulrich.owen@kristin.biz",
-      status: "Active",
-      access: "Manager",
-      img: "https://reqres.in/img/faces/6-image.jpg",
-      id: "8",
-      clicksReviewed: "1,600",
-      monthlyClicks: "3500",
-      progress: "30"
-    },
-    {
-      name: "Phawta Tuntayakul",
-      email: "ullrich.owen@kristin.biz",
-      status: "Active",
-      access: "Manager",
-      img: "https://reqres.in/img/faces/6-image.jpg",
-      id: "9",
-      clicksReviewed: "1,600",
-      monthlyClicks: "3500",
-      progress: "30"
-    },
-    
-  ],
-  userCard: null
+  fetchStatus: "idle",
+  error: null,
+  usersList: [],
+  userCard: null,
+  currentPage: 0,
+  totalPages: null
 };
+
+export const fetchUserData = createAsyncThunk(
+  "users/fetchUserData",
+  async (page) => {
+    const response = await axios.get(
+      `https://servers-omega.vercel.app/users/p?limit=8&page=${page}`
+    );
+    const data = await response.data;
+    return data;
+  }
+);
 
 const userSlice = createSlice({
   name: "users",
   initialState,
   reducers: {
-    showCard(state,action){
-       const userId = action.payload.userId
-      const hoveredUser = state.usersList.find(user => user.id == userId)
+    showCard(state, action) {
+      const userId = action.payload.userId;
+      const hoveredUser = state.usersList.find((user) => user._id == userId);
       state.userCard = {
-        name : hoveredUser.name,
+        name: `${hoveredUser.first_name} ${hoveredUser.last_name}`,
         email: hoveredUser.email,
-        img: hoveredUser.img,
-        progress: hoveredUser.progress,
-        clicksReviewed: hoveredUser.clicksReviewed,
-        monthlyClicks: hoveredUser.monthlyClicks,
-      }
+        avatar: hoveredUser.avatar,
+        active: hoveredUser.active,
+        progress: "60",
+        clicksReviewed: "2,450",
+        monthlyClicks: "5,000",
+      };
     },
-    hideCard(state){
-      state.userCard = null
+    hideCard(state) {
+      state.userCard = null;
+    },
+    changePage(state,action){
+      state.pageCount = action.payload
+      console.log(action.payload)
     }
+  },
+  extraReducers(builder) {
+    builder
+      .addCase(fetchUserData.pending, (state, action) => {
+        state.fetchStatus = "loading";
+      })
+      .addCase(fetchUserData.fulfilled, (state, action) => {
+        state.fetchStatus = "success";
+        state.usersList = action.payload.users;
+        state.currentPage = action.payload.currentPage;
+        state.totalPages = action.payload.totalPages
+      })
+      .addCase(fetchUserData.rejected, (state, action) => {
+        state.fetchStatus = "failed";
+        state.error = action.payload.error
+      });
   },
 });
 

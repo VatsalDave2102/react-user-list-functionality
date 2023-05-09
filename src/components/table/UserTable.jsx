@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 
 const UserTable = ( ) => {
   const users = useSelector(state => state.users.usersList)
+ 
   return (
     <>
       <Table responsive borderless className="user-table">
@@ -22,13 +23,14 @@ const UserTable = ( ) => {
         <tbody>
           {users.map((user) => (
             <UserRow
-              key={user.id}
-              name={user.name}
+              key={user._id}
+              name={`${user.first_name} ${user.last_name}`}
               email={user.email}
-              access={user.access}
-              status = {user.status}
-              img = {user.img}
-              id = {user.id}
+              role={user.role}
+              owner = {user.owner}
+              active = {user.active}
+              avatar = {user.avatar}
+              id = {user._id}
             />
           ))}
         </tbody>

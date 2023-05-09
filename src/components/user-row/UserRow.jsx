@@ -5,32 +5,33 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { usersAction } from "../../store/strore";
 
-const UserRow = ({ name, email, status, access, img, id }) => {
+const UserRow = ({ name, email, active, owner, role, avatar, id }) => {
   const [isOwner, setIsOwner] = useState(false);
 
   const dispatch = useDispatch()
   useEffect(() => {
-    if (access === "Owner") {
+    if (owner) {
       setIsOwner(true);
     }
-  }, [access]);
+  }, [owner]);
 
   const statusColumnStyle = { color: "green", fontWeight: "bolder" };
   const accessColumnStyle = { color: "gray", fontWeight: "bolder" };
-  let statusColumnData = status;
-  let accessColumnData = access;
+
+  let statusColumnData = 'Active'
+  let accessColumnData = role;
   let iconColumnData =  <span className="material-symbols-outlined">lock</span>
 
   if (!isOwner) {
     accessColumnData = (
-      <Form.Select defaultValue = {access}>
+      <Form.Select defaultValue = {role}>
         <option>Manager</option>
         <option>Read</option>
       </Form.Select>
     );
 
     statusColumnData = (
-      <Form.Select>
+      <Form.Select defaultValue={active ? 'Active': 'Inactive'}>
         <option>Inactive</option>
         <option>Active</option>
       </Form.Select>
@@ -53,7 +54,7 @@ const UserRow = ({ name, email, status, access, img, id }) => {
       <td>
         <div className="profile-container d-flex justify-content-start" onMouseEnter={()=>showCard(id)} onMouseLeave={()=>hideCard(id)}>
           <div className="img-container me-4">
-            <Image src={img} roundedCircle />
+            <Image src={avatar} roundedCircle />
           </div>
           <div className="userdata-container">
             <p className="name m-0">{name}</p>
@@ -63,12 +64,12 @@ const UserRow = ({ name, email, status, access, img, id }) => {
       </td>
 
       {/* Td for status */}
-      <td style={status.length > 0 ? statusColumnStyle : undefined}>
+      <td style={isOwner ? statusColumnStyle : undefined}>
         {statusColumnData}
       </td>
 
       {/* Td for access */}
-      <td style={accessColumnStyle}>{accessColumnData}</td>
+      <td style={isOwner ? accessColumnStyle : undefined}>{accessColumnData}</td>
 
       {/* Lock / Dustbin icon */}
       <td style={{color: "gray"}}>
@@ -81,9 +82,10 @@ const UserRow = ({ name, email, status, access, img, id }) => {
 UserRow.propTypes = {
   name: PropTypes.string,
   email: PropTypes.string,
-  status: PropTypes.string,
-  access: PropTypes.string,
-  img: PropTypes.string,
+  role: PropTypes.string,
+  active: PropTypes.bool,
+  avatar: PropTypes.string,
   id: PropTypes.string,
+  owner : PropTypes.bool,
 };
 export default UserRow;
