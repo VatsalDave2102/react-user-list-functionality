@@ -1,12 +1,11 @@
-import './App.css'
-import ListContainer from './components/list-container/ListContainer'
-function App() {
+import ListContainer from "./components/list-container/ListContainer";
 
+function App() {
   return (
     <>
-      <ListContainer/>
+      <ListContainer />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

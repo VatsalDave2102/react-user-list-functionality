@@ -1,14 +1,14 @@
- .user-table{
-    background-color: white;   
- }
- .table-responsive{
-    width: 60%;
-    margin-right: 2rem;  
-  }
+.user-table {
+  background-color: white;
+}
+.table-responsive {
+  width: 60%;
+  margin-right: 2rem;
+}
 
-  @media only screen and (max-width:768px){
-   .table-responsive{
-      width: 90%;
-      margin-right: 0;
-   }
+@media only screen and (max-width: 768px) {
+  .table-responsive {
+    width: 90%;
+    margin-right: 0;
   }
+}

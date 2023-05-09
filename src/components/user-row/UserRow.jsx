@@ -5,55 +5,63 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { usersAction } from "../../store/strore";
 
-const UserRow = ({ name, email, status, access, img, id }) => {
+const UserRow = ({ name, email, active, owner, role, avatar, id }) => {
   const [isOwner, setIsOwner] = useState(false);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+
+  // checking if current user is owner
   useEffect(() => {
-    if (access === "Owner") {
+    if (owner) {
       setIsOwner(true);
     }
-  }, [access]);
+  }, [owner]);
 
+  // styles for status and access column fields
   const statusColumnStyle = { color: "green", fontWeight: "bolder" };
   const accessColumnStyle = { color: "gray", fontWeight: "bolder" };
-  let statusColumnData = status;
-  let accessColumnData = access;
-  let iconColumnData =  <span className="material-symbols-outlined">lock</span>
+
+  let statusColumnData = "Active";
+  let accessColumnData = role;
+  let iconColumnData = <span className="material-symbols-outlined">lock</span>;
 
   if (!isOwner) {
     accessColumnData = (
-      <Form.Select defaultValue = {access}>
+      <Form.Select defaultValue={role}>
         <option>Manager</option>
         <option>Read</option>
       </Form.Select>
     );
 
     statusColumnData = (
-      <Form.Select>
+      <Form.Select defaultValue={active ? "Active" : "Inactive"}>
         <option>Inactive</option>
         <option>Active</option>
       </Form.Select>
     );
 
-    iconColumnData = <span className="material-symbols-outlined">
-    delete
-    </span>
+    iconColumnData = <span className="material-symbols-outlined">delete</span>;
   }
 
-  function showCard(id){
-    dispatch(usersAction.showCard({userId:id}))
+  // functions to show and hide user card
+  function showCard(id) {
+    dispatch(usersAction.showCard({ userId: id }));
   }
-  function hideCard(){
-    dispatch(usersAction.hideCard())
+  function hideCard() {
+    dispatch(usersAction.hideCard());
   }
+
   return (
     <tr className="align-middle">
-      {/* This contains namge, image and email */}
+      {/* This td contains namge, image and email */}
       <td>
-        <div className="profile-container d-flex justify-content-start" onMouseEnter={()=>showCard(id)} onMouseLeave={()=>hideCard(id)}>
+        <div
+          className="profile-container d-flex justify-content-start"
+          onMouseEnter={() => showCard(id)}
+          onMouseLeave={() => hideCard(id)}
+        >
           <div className="img-container me-4">
-            <Image src={img} roundedCircle />
+            <Image src={avatar} roundedCircle />
           </div>
           <div className="userdata-container">
             <p className="name m-0">{name}</p>
@@ -63,17 +71,17 @@ const UserRow = ({ name, email, status, access, img, id }) => {
       </td>
 
       {/* Td for status */}
-      <td style={status.length > 0 ? statusColumnStyle : undefined}>
+      <td style={isOwner ? statusColumnStyle : undefined}>
         {statusColumnData}
       </td>
 
       {/* Td for access */}
-      <td style={accessColumnStyle}>{accessColumnData}</td>
+      <td style={isOwner ? accessColumnStyle : undefined}>
+        {isOwner ? "Owner" : accessColumnData}
+      </td>
 
       {/* Lock / Dustbin icon */}
-      <td style={{color: "gray"}}>
-        {iconColumnData}
-      </td>
+      <td style={{ color: "gray" }}>{iconColumnData}</td>
     </tr>
   );
 };
@@ -81,9 +89,10 @@ const UserRow = ({ name, email, status, access, img, id }) => {
 UserRow.propTypes = {
   name: PropTypes.string,
   email: PropTypes.string,
-  status: PropTypes.string,
-  access: PropTypes.string,
-  img: PropTypes.string,
+  role: PropTypes.string,
+  active: PropTypes.bool,
+  avatar: PropTypes.string,
   id: PropTypes.string,
+  owner: PropTypes.bool,
 };
 export default UserRow;

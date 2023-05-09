@@ -1,23 +1,38 @@
-import { Card, Image, ProgressBar } from "react-bootstrap";
+import { Badge, Card, Image, ProgressBar } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import "./UserCard.css";
 
 const UserCard = () => {
   const cardData = useSelector((state) => state.users.userCard);
-   
+
+  let statusStyle = {
+    width: "15px",
+    height: "15px",
+    borderRadius: "50%",
+    backgroundColor: "rgb(34, 195, 6)",
+    border: "2px solid white",
+  };
+
+  if (!cardData.active) {
+    statusStyle.backgroundColor = "#d6a92d";
+  }
+
   return (
     <Card
-      style={{width:'17rem'}}
-      className={"justify-content-center align-items-center ms-md-5 mt-4 mt-md-0 transition show"}
+      style={{ width: "17rem" }}
+      className={
+        "justify-content-center align-items-center ms-md-5 mt-4 mt-md-0 transition show"
+      }
     >
       {/* Image */}
-      <Image src={cardData.img} className="card-img mt-3" roundedCircle />
+      <Image src={cardData.avatar} className="card-img mt-3" roundedCircle />
 
       {/* User data */}
       <Card.Body className="w-100 d-flex flex-column align-items-center">
         {/* Name */}
-        <Card.Title className="text-center name mx-auto">
+        <Card.Title className="text-center name mx-auto position-relative w-100 d-flex justify-content-center">
           {cardData.name}
+          <div style={statusStyle}></div>
         </Card.Title>
 
         {/* Mail */}

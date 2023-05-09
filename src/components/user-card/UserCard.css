@@ -6,12 +6,12 @@
   border: none !important;
   height: 450px !important;
 }
-.hidden{
+.hidden {
   visibility: hidden;
   opacity: 0;
   transition: opacity 1s ease;
 }
-.visible{
+.visible {
   visibility: visible;
   opacity: 1;
 }
@@ -24,9 +24,20 @@
   border-radius: 10px;
 }
 .card .progress-bar .progress {
-    height: 8px;
+  height: 8px;
 }
-.clicks-review, .monthly-clicks{
-    font-size: 0.8rem;
+.clicks-review,
+.monthly-clicks {
+  font-size: 0.8rem;
 }
- 
+.status {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: rgb(34, 195, 6);
+  border: 2px solid white;
+  top: 0;
+  right: 0;
+  position: absolute;
+  margin-right: 30px;
+}
